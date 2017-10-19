@@ -82,7 +82,7 @@ type
   private
     FExtends: string;
     FFields: TJavaFieldList;
-    FImpls: string;
+    FImpls: TStringList;
     FIsAbstract: Boolean;
     FIsInterface: Boolean;
     FJavaClassName: string;
@@ -95,7 +95,7 @@ type
     property JavaPackageName: string read FJavaPackageName write FJavaPackageName;
     property JavaClassName: string read FJavaClassName write FJavaClassName;
     property Extends: string read FExtends write FExtends;
-    property Impls: string read FImpls write FImpls;
+    property Impls: TStringList read FImpls write FImpls;
     property Methods: TJavaMethodList read FMethods write FMethods;
     property Fields: TJavaFieldList read FFields write FFields;
     property IsInterface: Boolean read FIsInterface write FIsInterface;
@@ -113,7 +113,7 @@ constructor TJavaClass.Create;
 begin
   FExtends:= '';
   FFields:= nil;
-  FImpls:= '';
+  FImpls:= nil;
   FIsAbstract:= False;;
   FIsInterface:= False;
   FJavaClassName:= '';
@@ -125,6 +125,7 @@ destructor TJavaClass.Destroy;
 var
   i: Integer;
 begin
+  if (Assigned(FImpls)) then FImpls.Free;
   if (Assigned(FFields)) then begin
     for i := FFields.Count - 1 downto 0 do FFields[i].Free;
     FFields.Free;
