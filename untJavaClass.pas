@@ -104,6 +104,9 @@ type
 
 implementation
 
+uses
+  untJavaClassLoader;
+
 { TJavaClass }
 
 constructor TJavaClass.Create;
@@ -134,8 +137,16 @@ begin
 end;
 
 procedure TJavaClass.LoadJavaFile(AFileName: string);
+var
+  ACode: string = '';
 begin
-  // TODO: load java class
+  // load java class
+  with TStringList.Create do begin
+    LoadFromFile(AFileName);
+    ACode:= Text;
+    Free;
+  end;
+  codeToJavaClass(ACode, Self);
 end;
 
 { TJavaMethod }

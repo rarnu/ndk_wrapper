@@ -6,7 +6,7 @@ uses
   {$IFNDEF WINDOWS}
   cthreads,
   {$ENDIF}
-  Classes, sysutils, untJavaClass;
+  Classes, sysutils, untJavaClass, untJavaClassLoader;
 
 begin
 end.
