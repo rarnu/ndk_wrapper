@@ -86,11 +86,13 @@ type
     FIsAbstract: Boolean;
     FIsInterface: Boolean;
     FJavaClassName: string;
+    FJavaPackageName: string;
     FMethods: TJavaMethodList;
   public
     constructor Create;
     destructor Destroy; override;
     procedure LoadJavaFile(AFileName: string);
+    property JavaPackageName: string read FJavaPackageName write FJavaPackageName;
     property JavaClassName: string read FJavaClassName write FJavaClassName;
     property Extends: string read FExtends write FExtends;
     property Impls: string read FImpls write FImpls;
@@ -113,6 +115,7 @@ begin
   FIsInterface:= False;
   FJavaClassName:= '';
   FMethods:= nil;
+  FJavaPackageName := '';
 end;
 
 destructor TJavaClass.Destroy;
