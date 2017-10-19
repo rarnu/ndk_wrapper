@@ -36,7 +36,7 @@ type
     property ParamType: TJavaType read FParamType write FParamType;
   end;
 
-  TJavaParamList = specialize TFPGList<TJavaType>;
+  TJavaParamList = specialize TFPGList<TJavaParam>;
 
   { TJavaField }
 
@@ -63,14 +63,14 @@ type
     FIsStatic: Boolean;
     FMethodName: string;
     FMethodParams: TJavaParamList;
-    FMethodReturn: TJavaParam;
+    FMethodReturn: TJavaType;
   public
     constructor Create;
-    constructor Create(AMethodName: string; AMethodParams: TJavaParamList; AMethodReturn: TJavaParam; AIsStatic: Boolean);
+    constructor Create(AMethodName: string; AMethodParams: TJavaParamList; AMethodReturn: TJavaType; AIsStatic: Boolean);
     destructor Destroy; override;
     property MethodName: string read FMethodName write FMethodName;
     property MethodParams: TJavaParamList read FMethodParams write FMethodParams;
-    property MethodReturn: TJavaParam read FMethodReturn write FMethodReturn;
+    property MethodReturn: TJavaType read FMethodReturn write FMethodReturn;
     property IsStatic: Boolean read FIsStatic write FIsStatic;
   end;
 
@@ -161,7 +161,7 @@ begin
 end;
 
 constructor TJavaMethod.Create(AMethodName: string;
-  AMethodParams: TJavaParamList; AMethodReturn: TJavaParam; AIsStatic: Boolean);
+  AMethodParams: TJavaParamList; AMethodReturn: TJavaType; AIsStatic: Boolean);
 begin
   FMethodName:= AMethodName;
   FMethodParams := AMethodParams;

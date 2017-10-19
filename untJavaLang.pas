@@ -61,6 +61,7 @@ begin
       Break;
     end;
   end;
+  if (Result = '') and (AType = 'T') then Result := 'Ljava/lang/Object;';
   if (isArray) and (Result <> '') then Result := '['+Result;
 end;
 

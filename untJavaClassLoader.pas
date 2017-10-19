@@ -19,6 +19,7 @@ var
   ATmp: string;
   AArr: TStringArray;
   s: string;
+  ATmp2: string;
 begin
   // public abstract class
   AJavaClass.IsAbstract:= ACode.Contains(' abstract ');
@@ -32,11 +33,21 @@ begin
       AJavaClass.Extends:= ATmp.Substring(0, ATmp.IndexOf(' '));
       if (AJavaClass.Impls = nil) then AJavaClass.Impls := TStringList.Create;
       AArr := ATmp.Substring(ATmp.IndexOf(' implements ') + 12).Trim.Split(',');
-      for s in AArr do if (s.Trim <> '') then AJavaClass.Impls.Add(s.Trim);
+      for s in AArr do begin
+        ATmp2:= s.Trim;
+        if (ATmp2 <> '') then begin
+          if (ATmp2.Contains('<')) then begin
+            AJavaClass.Impls.Add(ATmp2.Substring(0, ATmp2.IndexOf('<')));
+          end else begin
+            AJavaClass.Impls.Add(ATmp2);
+          end;
+        end;
+      end;
     end else begin
       AJavaClass.Extends:= ATmp;
     end;
   end;
+  if (AJavaClass.JavaClassName.Contains('<')) then AJavaClass.JavaClassName:= AJavaClass.JavaClassName.Substring(0, AJavaClass.JavaClassName.IndexOf('<'));
 end;
 
 procedure FillJavaInterfaceName(ACode: string; AJavaClass: TJavaClass);
@@ -44,6 +55,7 @@ var
   ATmp: string;
   AArr: TStringArray;
   s: string;
+  ATmp2: string;
 begin
   // public interface
   AJavaClass.IsAbstract:= True;
@@ -54,8 +66,18 @@ begin
     AJavaClass.JavaClassName:= AJavaClass.JavaClassName.Substring(0, AJavaClass.JavaClassName.IndexOf(' ')).Trim;
     if (AJavaClass.Impls = nil) then AJavaClass.Impls := TStringList.Create;
     AArr := ATmp.Substring(ATmp.IndexOf(' implements ') + 12).Trim.Split(',');
-    for s in AArr do if (s.Trim <> '') then AJavaClass.Impls.Add(s.Trim);
+    for s in AArr do begin
+      ATmp2:= s.Trim;
+      if (ATmp2 <> '') then begin
+        if (ATmp2.Contains('<')) then begin
+          AJavaClass.Impls.Add(ATmp2.Substring(0, ATmp2.IndexOf('<')));
+        end else begin
+          AJavaClass.Impls.Add(ATmp2);
+        end;
+      end;
+    end;
   end;
+  if (AJavaClass.JavaClassName.Contains('<')) then AJavaClass.JavaClassName:= AJavaClass.JavaClassName.Substring(0, AJavaClass.JavaClassName.IndexOf('<'));
 end;
 
 function FindSig(AType: string; AImportList: TStringList; APkgName: string): TJavaType;
@@ -64,6 +86,7 @@ var
   i: Integer;
   isArray: Boolean;
 begin
+  if (AType = 'void') then Exit(nil);
   // find sig
   Result := TJavaType.Create;
   sig := FindRegularSig(AType);
@@ -111,9 +134,19 @@ begin
 end;
 
 function IsMethod(ACode: string): Boolean;
+var
+  ATmp: string;
+  hasQuote: Boolean;
+  AArr: TStringArray;
 begin
-  if (ACode.Contains('@')) then Exit;
-  // public abstract Looper getMainLooper();
+  Result := False;
+  if (ACode.Trim.StartsWith('public ')) then begin
+    ATmp:= ACode.Trim;
+    hasQuote:= (ATmp.Contains('(')) and (ATmp.Contains(')'));
+    ATmp:= ATmp.Substring(0, ATmp.IndexOf('('));
+    AArr := ATmp.Split(' ');
+    if (hasQuote) and (Length(AArr) >= 3) then Result := True;
+  end;
 end;
 
 procedure FillField(ACode: string; APkgName: string; AJavaClass: TJavaClass; AImportList: TStringList);
@@ -141,11 +174,54 @@ begin
   AJavaClass.Fields.Add(AField);
 end;
 
-procedure FillMethod(ACode: string; AJavaClass: TJavaClass);
+procedure FillMethodParams(ACode: string; APkgName: string; AMethod: TJavaMethod; AImportList: TStringList);
+var
+  AArr: TStringArray;
+  i: Integer;
+  s: string;
+  tmpArr: TStringArray;
+  AParam: TJavaParam;
 begin
-  // TODO: fill method
-  if (AJavaClass.Methods = nil) then AJavaClass.Methods := TJavaMethodList.Create;
+  // (@RequiresPermission Intent intent)
+  ACode:= ACode.Replace('(', '').Replace(')', '').Trim;
+  if (ACode = '') then Exit;
+  AArr := ACode.Split(',');
+  if (Length(AArr) > 0) then begin
+    if (AMethod.MethodParams = nil) then AMethod.MethodParams := TJavaParamList.Create;
+    for s in AArr do begin
+      //
+      tmpArr := s.Trim.Split(' ');
+      AParam := TJavaParam.Create;
+      AParam.ParamName:= tmpArr[Length(tmpArr) - 1];
+      AParam.ParamType:= FindSig(tmpArr[Length(tmpArr) - 2], AImportList, APkgName);
+      AMethod.MethodParams.Add(AParam);
+    end;
+  end;
 
+end;
+
+procedure FillMethod(ACode: string; APkgName: string; AJavaClass: TJavaClass; AImportList: TStringList);
+var
+  ATmp: string;
+  AMethod: TJavaMethod;
+  AParamStr: string;
+  AArr: TStringArray;
+  ARetType: string;
+begin
+  // fill method
+  ACode:= ACode.Trim;
+  if (AJavaClass.Methods = nil) then AJavaClass.Methods := TJavaMethodList.Create;
+  AMethod := TJavaMethod.Create;
+  ATmp:= ACode.Substring(0, ACode.IndexOf(')') + 1);
+  AParamStr:= ATmp.Substring(ATmp.IndexOf('('));
+  ATmp:= ATmp.Substring(0, ATmp.IndexOf('('));
+  AArr := ATmp.Split(' ');
+  AMethod.IsStatic:= ATmp.Contains(' static ');
+  AMethod.MethodName:= AArr[Length(AArr) - 1];
+  ARetType:= AArr[Length(AArr) - 2];
+  AMethod.MethodReturn := FindSig(ARetType, AImportList, APkgName);
+  FillMethodParams(AParamStr, APkgName, AMethod, AImportList);
+  AJavaClass.Methods.Add(AMethod);
 end;
 
 procedure codeToJavaClass(ACode: string; AJavaClass: TJavaClass);
@@ -155,7 +231,7 @@ var
   i: Integer;
 begin
   importList := TStringList.Create;
-  // TODO: load
+  // load
   sl := TStringList.Create;
   sl.Text:= ACode;
   for i := 0 to sl.Count - 1 do begin
@@ -182,7 +258,7 @@ begin
       Continue;
     end;
     if (IsMethod(sl[i])) then begin
-      FillMethod(sl[i], AJavaClass);
+      FillMethod(sl[i], AJavaClass.JavaPackageName, AJavaClass, importList);
     end;
   end;
   sl.Free;

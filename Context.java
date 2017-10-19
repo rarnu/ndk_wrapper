@@ -77,7 +77,10 @@ import java.lang.annotation.RetentionPolicy;
  * up-calls for application-level operations such as launching activities,
  * broadcasting and receiving intents, etc.
  */
-public abstract class Context {
+public abstract class Context<T> {
+    
+    public T FS;
+    
     public int[] Samplefield;
     /**
      * File creation mode: the default mode, where the created file can only
@@ -2588,8 +2591,7 @@ public abstract class Context {
      */
     @SystemApi
     @SuppressWarnings("unused")
-    public boolean bindServiceAsUser(@RequiresPermission Intent service, ServiceConnection conn,
-            int flags, UserHandle user) {
+    public boolean bindServiceAsUser(@RequiresPermission Intent service, ServiceConnection conn, int flags, UserHandle user) {
         throw new RuntimeException("Not implemented. Must override in a subclass.");
     }
 
@@ -2599,8 +2601,7 @@ public abstract class Context {
      *
      * @hide
      */
-    public boolean bindServiceAsUser(Intent service, ServiceConnection conn, int flags,
-            Handler handler, UserHandle user) {
+    public static boolean bindServiceAsUser(Intent service, ServiceConnection conn, int flags, Handler handler, UserHandle user) {
         throw new RuntimeException("Not implemented. Must override in a subclass.");
     }
 
@@ -2639,8 +2640,7 @@ public abstract class Context {
      * @return {@code true} if the instrumentation was successfully started,
      * else {@code false} if it could not be found.
      */
-    public abstract boolean startInstrumentation(@NonNull ComponentName className,
-            @Nullable String profileFile, @Nullable Bundle arguments);
+    public abstract boolean startInstrumentation(@NonNull ComponentName className, @Nullable String profileFile, @Nullable Bundle arguments);
 
     /** @hide */
     @StringDef({
