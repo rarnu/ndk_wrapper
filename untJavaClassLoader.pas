@@ -189,7 +189,6 @@ begin
   if (Length(AArr) > 0) then begin
     if (AMethod.MethodParams = nil) then AMethod.MethodParams := TJavaParamList.Create;
     for s in AArr do begin
-      //
       tmpArr := s.Trim.Split(' ');
       AParam := TJavaParam.Create;
       AParam.ParamName:= tmpArr[Length(tmpArr) - 1];
@@ -197,7 +196,6 @@ begin
       AMethod.MethodParams.Add(AParam);
     end;
   end;
-
 end;
 
 procedure FillMethod(ACode: string; APkgName: string; AJavaClass: TJavaClass; AImportList: TStringList);

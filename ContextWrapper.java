@@ -48,7 +48,7 @@ import java.io.InputStream;
  * another Context.  Can be subclassed to modify behavior without changing
  * the original Context.
  */
-public class ContextWrapper extends Context implements Test,Test1 {
+public class ContextWrapper extends Contextimplements Test,Test1 {
     Context mBase;
 
     public ContextWrapper(Context base) {
@@ -181,14 +181,12 @@ public class ContextWrapper extends Context implements Test,Test1 {
     }
 
     @Override
-    public FileInputStream openFileInput(String name)
-        throws FileNotFoundException {
+    public FileInputStream openFileInput(String name)throws FileNotFoundException {
         return mBase.openFileInput(name);
     }
 
     @Override
-    public FileOutputStream openFileOutput(String name, int mode)
-        throws FileNotFoundException {
+    public FileOutputStream openFileOutput(String name, int mode)throws FileNotFoundException {
         return mBase.openFileOutput(name, mode);
     }
 
@@ -284,8 +282,7 @@ public class ContextWrapper extends Context implements Test,Test1 {
     }
 
     @Override
-    public SQLiteDatabase openOrCreateDatabase(String name, int mode, CursorFactory factory,
-            DatabaseErrorHandler errorHandler) {
+    public SQLiteDatabase openOrCreateDatabase(String name, int mode, CursorFactory factory,DatabaseErrorHandler errorHandler) {
         return mBase.openOrCreateDatabase(name, mode, factory, errorHandler);
     }
 
@@ -363,8 +360,7 @@ public class ContextWrapper extends Context implements Test,Test1 {
     }
 
     /** @hide **/
-    public void startActivityForResult(
-            String who, Intent intent, int requestCode, Bundle options) {
+    public void startActivityForResult(String who, Intent intent, int requestCode, Bundle options) {
         mBase.startActivityForResult(who, intent, requestCode, options);
     }
 
@@ -401,17 +397,13 @@ public class ContextWrapper extends Context implements Test,Test1 {
     }
 
     @Override
-    public void startIntentSender(IntentSender intent,
-            Intent fillInIntent, int flagsMask, int flagsValues, int extraFlags)
-            throws IntentSender.SendIntentException {
+    public void startIntentSender(IntentSender intent,Intent fillInIntent, int flagsMask, int flagsValues, int extraFlags)throws IntentSender.SendIntentException {
         mBase.startIntentSender(intent, fillInIntent, flagsMask,
                 flagsValues, extraFlags);
     }
 
     @Override
-    public void startIntentSender(IntentSender intent,
-            Intent fillInIntent, int flagsMask, int flagsValues, int extraFlags,
-            Bundle options) throws IntentSender.SendIntentException {
+    public void startIntentSender(IntentSender intent,Intent fillInIntent, int flagsMask, int flagsValues, int extraFlags,Bundle options) throws IntentSender.SendIntentException {
         mBase.startIntentSender(intent, fillInIntent, flagsMask,
                 flagsValues, extraFlags, options);
     }
@@ -446,16 +438,12 @@ public class ContextWrapper extends Context implements Test,Test1 {
     }
 
     @Override
-    public void sendOrderedBroadcast(Intent intent,
-            String receiverPermission) {
+    public void sendOrderedBroadcast(Intent intent,String receiverPermission) {
         mBase.sendOrderedBroadcast(intent, receiverPermission);
     }
 
     @Override
-    public void sendOrderedBroadcast(
-        Intent intent, String receiverPermission, BroadcastReceiver resultReceiver,
-        Handler scheduler, int initialCode, String initialData,
-        Bundle initialExtras) {
+    public void sendOrderedBroadcast(Intent intent, String receiverPermission, BroadcastReceiver resultReceiver,Handler scheduler, int initialCode, String initialData,Bundle initialExtras) {
         mBase.sendOrderedBroadcast(intent, receiverPermission,
                 resultReceiver, scheduler, initialCode,
                 initialData, initialExtras);
@@ -464,10 +452,7 @@ public class ContextWrapper extends Context implements Test,Test1 {
     /** @hide */
     @SystemApi
     @Override
-    public void sendOrderedBroadcast(
-            Intent intent, String receiverPermission, Bundle options, BroadcastReceiver resultReceiver,
-            Handler scheduler, int initialCode, String initialData,
-            Bundle initialExtras) {
+    public void sendOrderedBroadcast(Intent intent, String receiverPermission, Bundle options, BroadcastReceiver resultReceiver,Handler scheduler, int initialCode, String initialData,Bundle initialExtras) {
         mBase.sendOrderedBroadcast(intent, receiverPermission,
                 options, resultReceiver, scheduler, initialCode,
                 initialData, initialExtras);
@@ -475,10 +460,7 @@ public class ContextWrapper extends Context implements Test,Test1 {
 
     /** @hide */
     @Override
-    public void sendOrderedBroadcast(
-        Intent intent, String receiverPermission, int appOp, BroadcastReceiver resultReceiver,
-        Handler scheduler, int initialCode, String initialData,
-        Bundle initialExtras) {
+    public void sendOrderedBroadcast(Intent intent, String receiverPermission, int appOp, BroadcastReceiver resultReceiver,Handler scheduler, int initialCode, String initialData,Bundle initialExtras) {
         mBase.sendOrderedBroadcast(intent, receiverPermission, appOp,
                 resultReceiver, scheduler, initialCode,
                 initialData, initialExtras);
@@ -490,40 +472,32 @@ public class ContextWrapper extends Context implements Test,Test1 {
     }
 
     @Override
-    public void sendBroadcastAsUser(Intent intent, UserHandle user,
-            String receiverPermission) {
+    public void sendBroadcastAsUser(Intent intent, UserHandle user,String receiverPermission) {
         mBase.sendBroadcastAsUser(intent, user, receiverPermission);
     }
 
     /** @hide */
     @Override
-    public void sendBroadcastAsUser(Intent intent, UserHandle user,
-            String receiverPermission, int appOp) {
+    public void sendBroadcastAsUser(Intent intent, UserHandle user,String receiverPermission, int appOp) {
         mBase.sendBroadcastAsUser(intent, user, receiverPermission, appOp);
     }
 
     @Override
-    public void sendOrderedBroadcastAsUser(Intent intent, UserHandle user,
-            String receiverPermission, BroadcastReceiver resultReceiver, Handler scheduler,
-            int initialCode, String initialData, Bundle initialExtras) {
+    public void sendOrderedBroadcastAsUser(Intent intent, UserHandle user,String receiverPermission, BroadcastReceiver resultReceiver, Handler scheduler,int initialCode, String initialData, Bundle initialExtras) {
         mBase.sendOrderedBroadcastAsUser(intent, user, receiverPermission, resultReceiver,
                 scheduler, initialCode, initialData, initialExtras);
     }
 
     /** @hide */
     @Override
-    public void sendOrderedBroadcastAsUser(Intent intent, UserHandle user,
-            String receiverPermission, int appOp, BroadcastReceiver resultReceiver,
-            Handler scheduler, int initialCode, String initialData, Bundle initialExtras) {
+    public void sendOrderedBroadcastAsUser(Intent intent, UserHandle user,String receiverPermission, int appOp, BroadcastReceiver resultReceiver,Handler scheduler, int initialCode, String initialData, Bundle initialExtras) {
         mBase.sendOrderedBroadcastAsUser(intent, user, receiverPermission, appOp, resultReceiver,
                 scheduler, initialCode, initialData, initialExtras);
     }
 
     /** @hide */
     @Override
-    public void sendOrderedBroadcastAsUser(Intent intent, UserHandle user,
-            String receiverPermission, int appOp, Bundle options, BroadcastReceiver resultReceiver,
-            Handler scheduler, int initialCode, String initialData, Bundle initialExtras) {
+    public void sendOrderedBroadcastAsUser(Intent intent, UserHandle user,String receiverPermission, int appOp, Bundle options, BroadcastReceiver resultReceiver,Handler scheduler, int initialCode, String initialData, Bundle initialExtras) {
         mBase.sendOrderedBroadcastAsUser(intent, user, receiverPermission, appOp, options,
                 resultReceiver, scheduler, initialCode, initialData, initialExtras);
     }
@@ -536,10 +510,7 @@ public class ContextWrapper extends Context implements Test,Test1 {
 
     @Override
     @Deprecated
-    public void sendStickyOrderedBroadcast(
-        Intent intent, BroadcastReceiver resultReceiver,
-        Handler scheduler, int initialCode, String initialData,
-        Bundle initialExtras) {
+    public void sendStickyOrderedBroadcast(Intent intent, BroadcastReceiver resultReceiver,Handler scheduler, int initialCode, String initialData,Bundle initialExtras) {
         mBase.sendStickyOrderedBroadcast(intent,
                 resultReceiver, scheduler, initialCode,
                 initialData, initialExtras);
@@ -566,10 +537,7 @@ public class ContextWrapper extends Context implements Test,Test1 {
 
     @Override
     @Deprecated
-    public void sendStickyOrderedBroadcastAsUser(Intent intent,
-            UserHandle user, BroadcastReceiver resultReceiver,
-            Handler scheduler, int initialCode, String initialData,
-            Bundle initialExtras) {
+    public void sendStickyOrderedBroadcastAsUser(Intent intent,UserHandle user, BroadcastReceiver resultReceiver,Handler scheduler, int initialCode, String initialData,Bundle initialExtras) {
         mBase.sendStickyOrderedBroadcastAsUser(intent, user, resultReceiver,
                 scheduler, initialCode, initialData, initialExtras);
     }
@@ -581,24 +549,19 @@ public class ContextWrapper extends Context implements Test,Test1 {
     }
 
     @Override
-    public Intent registerReceiver(
-        BroadcastReceiver receiver, IntentFilter filter) {
+    public Intent registerReceiver(BroadcastReceiver receiver, IntentFilter filter) {
         return mBase.registerReceiver(receiver, filter);
     }
 
     @Override
-    public Intent registerReceiver(
-        BroadcastReceiver receiver, IntentFilter filter,
-        String broadcastPermission, Handler scheduler) {
+    public Intent registerReceiver(BroadcastReceiver receiver, IntentFilter filter,String broadcastPermission, Handler scheduler) {
         return mBase.registerReceiver(receiver, filter, broadcastPermission,
                 scheduler);
     }
 
     /** @hide */
     @Override
-    public Intent registerReceiverAsUser(
-        BroadcastReceiver receiver, UserHandle user, IntentFilter filter,
-        String broadcastPermission, Handler scheduler) {
+    public Intent registerReceiverAsUser(BroadcastReceiver receiver, UserHandle user, IntentFilter filter,String broadcastPermission, Handler scheduler) {
         return mBase.registerReceiverAsUser(receiver, user, filter, broadcastPermission,
                 scheduler);
     }
@@ -631,15 +594,13 @@ public class ContextWrapper extends Context implements Test,Test1 {
     }
 
     @Override
-    public boolean bindService(Intent service, ServiceConnection conn,
-            int flags) {
+    public boolean bindService(Intent service, ServiceConnection conn,int flags) {
         return mBase.bindService(service, conn, flags);
     }
 
     /** @hide */
     @Override
-    public boolean bindServiceAsUser(Intent service, ServiceConnection conn, int flags,
-            UserHandle user) {
+    public boolean bindServiceAsUser(Intent service, ServiceConnection conn, int flags,UserHandle user) {
         return mBase.bindServiceAsUser(service, conn, flags, user);
     }
 
@@ -649,8 +610,7 @@ public class ContextWrapper extends Context implements Test,Test1 {
     }
 
     @Override
-    public boolean startInstrumentation(ComponentName className,
-            String profileFile, Bundle arguments) {
+    public boolean startInstrumentation(ComponentName className,String profileFile, Bundle arguments) {
         return mBase.startInstrumentation(className, profileFile, arguments);
     }
 
@@ -691,8 +651,7 @@ public class ContextWrapper extends Context implements Test,Test1 {
     }
 
     @Override
-    public void enforcePermission(
-            String permission, int pid, int uid, String message) {
+    public void enforcePermission(String permission, int pid, int uid, String message) {
         mBase.enforcePermission(permission, pid, uid, message);
     }
 
@@ -702,8 +661,7 @@ public class ContextWrapper extends Context implements Test,Test1 {
     }
 
     @Override
-    public void enforceCallingOrSelfPermission(
-            String permission, String message) {
+    public void enforceCallingOrSelfPermission(String permission, String message) {
         mBase.enforceCallingOrSelfPermission(permission, message);
     }
 
@@ -739,56 +697,47 @@ public class ContextWrapper extends Context implements Test,Test1 {
     }
 
     @Override
-    public int checkUriPermission(Uri uri, String readPermission,
-            String writePermission, int pid, int uid, int modeFlags) {
+    public int checkUriPermission(Uri uri, String readPermission,String writePermission, int pid, int uid, int modeFlags) {
         return mBase.checkUriPermission(uri, readPermission, writePermission,
                 pid, uid, modeFlags);
     }
 
     @Override
-    public void enforceUriPermission(
-            Uri uri, int pid, int uid, int modeFlags, String message) {
+    public void enforceUriPermission(Uri uri, int pid, int uid, int modeFlags, String message) {
         mBase.enforceUriPermission(uri, pid, uid, modeFlags, message);
     }
 
     @Override
-    public void enforceCallingUriPermission(
-            Uri uri, int modeFlags, String message) {
+    public void enforceCallingUriPermission(Uri uri, int modeFlags, String message) {
         mBase.enforceCallingUriPermission(uri, modeFlags, message);
     }
 
     @Override
-    public void enforceCallingOrSelfUriPermission(
-            Uri uri, int modeFlags, String message) {
+    public void enforceCallingOrSelfUriPermission(Uri uri, int modeFlags, String message) {
         mBase.enforceCallingOrSelfUriPermission(uri, modeFlags, message);
     }
 
     @Override
-    public void enforceUriPermission(
-            Uri uri, String readPermission, String writePermission,
-            int pid, int uid, int modeFlags, String message) {
+    public void enforceUriPermission(Uri uri, String readPermission, String writePermission,int pid, int uid, int modeFlags, String message) {
         mBase.enforceUriPermission(
                 uri, readPermission, writePermission, pid, uid, modeFlags,
                 message);
     }
 
     @Override
-    public Context createPackageContext(String packageName, int flags)
-        throws PackageManager.NameNotFoundException {
+    public Context createPackageContext(String packageName, int flags)throws PackageManager.NameNotFoundException {
         return mBase.createPackageContext(packageName, flags);
     }
 
     /** @hide */
     @Override
-    public Context createPackageContextAsUser(String packageName, int flags, UserHandle user)
-            throws PackageManager.NameNotFoundException {
+    public Context createPackageContextAsUser(String packageName, int flags, UserHandle user)throws PackageManager.NameNotFoundException {
         return mBase.createPackageContextAsUser(packageName, flags, user);
     }
 
     /** @hide */
     @Override
-    public Context createApplicationContext(ApplicationInfo application,
-            int flags) throws PackageManager.NameNotFoundException {
+    public Context createApplicationContext(ApplicationInfo application,int flags) throws PackageManager.NameNotFoundException {
         return mBase.createApplicationContext(application, flags);
     }
 
