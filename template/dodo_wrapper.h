@@ -21,6 +21,18 @@ namespace jniext {
     template<typename T>
     class Array;
 
+
+#define METHOD_FOR_ALL_TYPE \
+    M(jboolean, Boolean) \
+    M(jchar, Char) \
+    M(jbyte, Byte) \
+    M(jshort, Short) \
+    M(jint, Int) \
+    M(jlong, Long) \
+    M(jfloat, Float) \
+    M(jdouble, Double)
+
+
     class Object {
     protected:
         jobject ori_value;
@@ -225,6 +237,17 @@ namespace jniext {
         }
     };
 
+
+#define M(type, tag) \
+inline type convertArg(type value) { \
+    return value; \
+}
+
+    METHOD_FOR_ALL_TYPE
+
+#undef M
+
+
     inline jstring convertArg(jstring value) {
         return value;
     }
@@ -273,8 +296,120 @@ namespace jniext {
         }
     };
 
+
+#define M(type, tag) \
+template<typename... A> \
+class Method<type, A...> : public MethodBase \
+{ \
+public: \
+    using MethodBase::MethodBase; \
+    type call(jobject target, A... args) const { \
+        return Environment::current()->Call ## tag ## Method(target, getMethodID(), convertArg(args)...); \
+    } \
+    type operator()(jobject target,  A... args) const { \
+        return call(target, args...); \
+    } \
+};
+
+    METHOD_FOR_ALL_TYPE
+
+#undef M
+
+
+    class StaticMethodBase {
+    protected:
+        jclass _cls;
+        const char *_clsName;
+        const char *_name;
+        const char *_signature;
+        mutable jmethodID _methodID;
+    public:
+        StaticMethodBase(const char *clsName, const char *name, const char *signature) : _cls(
+                nullptr), _clsName(clsName), _name(name), _signature(signature), _methodID(0) {
+        }
+
+
+        jmethodID getMethodID() const {
+            if (_methodID == nullptr) {
+
+                JNIEnv *env = Environment::current();
+                jclass cls = getClass();
+                jmethodID res = env->GetStaticMethodID(cls, _name, _signature);
+                _methodID = res;
+            }
+            return _methodID;
+        }
+
+        jclass getClass() const {
+            JNIEnv *env = Environment::current();
+            jclass cls = _cls ? _cls : env->FindClass(_clsName);
+            return cls;
+        }
+
+        operator jmethodID() const {
+            return getMethodID();
+        }
+
+        operator jclass() const {
+            return getClass();
+        }
+    };
+
+    template<typename R, typename... A>
+    class StaticMethod : public StaticMethodBase {
+    public:
+        using StaticMethodBase::StaticMethodBase;
+
+        R call(A... args) const {
+            return
+                    Environment::current()->CallStaticObjectMethod(getClass(), getMethodID(),
+                                                                   convertArg(args)...);
+        }
+
+        R operator()(A... args) const {
+            return call(args...);
+        }
+    };
+
+    template<typename... A>
+    class StaticMethod<void, A...> : public StaticMethodBase {
+    public:
+        using StaticMethodBase::StaticMethodBase;
+
+        void call(A... args) const {
+            return Environment::current()->CallStaticVoidMethod(getClass(), getMethodID(),
+                                                                convertArg(args)...);
+        }
+
+        void operator()(A... args) const {
+            call(args...);
+        }
+    };
+
+
+#define M(type, tag) \
+template<typename... A> \
+class StaticMethod<type, A...> : public StaticMethodBase \
+{ \
+public: \
+    using StaticMethodBase::StaticMethodBase; \
+    type call( A... args) const { \
+        return Environment::current()->CallStatic ## tag ## Method(getClass(), getMethodID(), convertArg(args)...); \
+    } \
+    type operator()( A... args) const { \
+        return call(args...); \
+    } \
+};
+
+    METHOD_FOR_ALL_TYPE
+
+#undef M
+
+
 ////////////////////////////////实现/////////////////////////////////////
-    inline String Object::toString() const {
+    inline String
+
+    Object::toString() const {
         Method<String> method("java/lang/Object", "toString", "()Ljava/lang/String;");
         return method.call(*this);
     }

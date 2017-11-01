@@ -12,6 +12,8 @@ namespace java {
     namespace lang {
         class Throwable;
 
+        class Thread;
+
         class Throwable : public jniext::Object {
         public:
             using jniext::Object::Object;
@@ -25,6 +27,21 @@ namespace java {
             static const char *clazz();
 
         };
+
+        class Thread : public jniext::Object {
+        public:
+            using jniext::Object::Object;
+
+            static Thread currentThread();
+
+            jniext::String getName() const;
+
+            jlong getId() const;
+
+            static const char *clazz();
+
+        };
+
     }
 }
 

@@ -27,3 +27,25 @@ Throwable Throwable::construct() {
     static jniext::Constructor<Throwable> constructor(clazz(), "()V");
     return constructor.construct();
 }
+
+
+// public static native java.lang.Thread java.lang.Thread.currentThread()
+Thread Thread::currentThread() {
+    static jniext::StaticMethod<Thread> method(clazz(), "currentThread", "()Ljava/lang/Thread;");
+    return method.call();
+}
+
+jlong Thread::getId() const {
+    static jniext::Method<jlong> method(clazz(), "getId", "()J");
+    return method.call(*this);
+}
+
+// public final java.lang.String java.lang.Thread.getName()
+jniext::String Thread::getName() const {
+    static jniext::Method<jniext::String> method(clazz(), "getName", "()Ljava/lang/String;");
+    return method.call(*this);
+}
+
+const char *Thread::clazz() {
+    return "java/lang/Thread";
+}
