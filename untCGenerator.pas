@@ -10,10 +10,17 @@ uses
 type
   TCGenerator = class(TInterfacedObject, ICodeGenerator)
   public
+    function GenerateHeader(AJavaClass: TJavaClass): string;
     function Generate(AJavaClass: TJavaClass): string;
   end;
 
 implementation
+
+function TCGenerator.GenerateHeader(AJavaClass: TJavaClass): string;
+begin
+  // TODO: generate c code
+  Exit('');
+end;
 
 function TCGenerator.Generate(AJavaClass: TJavaClass): string;
 begin

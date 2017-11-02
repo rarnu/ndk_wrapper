@@ -33,7 +33,7 @@ begin
   if (ATmp = 'long') then Result := 'J';
   if (ATmp = 'float') then Result := 'F';
   if (ATmp = 'double') then Result := 'D';
-  if (isArray) and (Result <> '') then Result := '['+Result;
+  if (isArray) and (Result <> '') then Result := '[' + Result;
 end;
 
 function FindLangObjectSig(AType: string): string;
@@ -51,7 +51,7 @@ begin
   Result := '';
   isArray:= Atype.Contains('[');
   if (isArray) then begin
-    ATmp:= Atype.Substring(0, Atype.IndexOf('[') - 1).Trim;
+    ATmp:= Atype.Substring(0, Atype.IndexOf('[')).Trim;
   end else begin
     ATmp:= Atype.Trim;
   end;
@@ -62,7 +62,7 @@ begin
     end;
   end;
   if (Result = '') and (AType = 'T') then Result := 'Ljava/lang/Object;';
-  if (isArray) and (Result <> '') then Result := '['+Result;
+  if (isArray) and (Result <> '') then Result := '[' + Result;
 end;
 
 end.

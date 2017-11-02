@@ -11,7 +11,7 @@ uses
 
 procedure WriteHelp();
 begin
-  // TODO: write help
+  // write help
   WriteLn('usage: ndkw <language> <java file>'#13#10#13#10'language: can be pas/c'#13#10#13#10'sample:'#13#10'    ndkw pas ./Context.java'#13#10'    ndkw c ./Context.java'#13#10);
 end;
 
@@ -21,9 +21,7 @@ var
   AFileName: string;
   AOutCode: string;
   AOutFile: string;
-  AOutExt: string = '';
   AGenerator: ICodeGenerator = nil;
-  
 begin
   if (ParamCount <> 2) then begin
     WriteHelp();
@@ -39,21 +37,29 @@ begin
 
   if (ALanguage = 'pas') then begin
     AGenerator := TPasGenerator.Create;
-    AOutExt := '.pas';
-  end else if (ALanguage = 'c') then begin
-    AGenerator := TCGenerator.Create;
-    AOutExt := '.c';
-  end;
-
-  if (AGenerator <> nil) then begin
     AOutCode := AGenerator.Generate(AJavaClass);
-    AOutFile := ChangeFileExt(AFileName, AOutExt);
+    AOutFile := '_' + ChangeFileExt(AFileName, '_.pas');
     with TStringList.Create do begin
       Text := AOutCode;
       SaveToFile(AOutFile);
       Free;
     end;
-    AGenerator.Free;
+  end else if (ALanguage = 'cpp') then begin
+    AGenerator := TCGenerator.Create;
+    AOutCode := AGenerator.GenerateHeader(AJavaClass);
+    AOutFile := '_' + ChangeFileExt(AFileName, '_.h');
+    with TStringList.Create do begin
+      Text := AOutCode;
+      SaveToFile(AOutFile);
+      Free;
+    end;
+    AOutCode := AGenerator.Generate(AJavaClass);
+    AOutFile := '_' + ChangeFileExt(AFileName, '_.cpp');
+    with TStringList.Create do begin
+      Text := AOutCode;
+      SaveToFile(AOutFile);
+      Free;
+    end;
   end;
 
   AJavaClass.Free;

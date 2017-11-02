@@ -15,11 +15,13 @@ type
   private
     FIsRegular: Boolean;
     FTypeSig: string;
+    FIsArray: Boolean;
   public
     constructor Create;
-    constructor Create(ATypeSig: string; AIsRegular: Boolean);
+    constructor Create(ATypeSig: string; AIsRegular: Boolean; AIsArray: Boolean);
     property TypeSig: string read FTypeSig write FTypeSig;
     property IsRegular: Boolean read FIsRegular write FIsRegular;
+    property IsArray: Boolean read FIsArray write FIsArray;
   end;
 
   { TJavaParam }
@@ -64,14 +66,16 @@ type
     FMethodName: string;
     FMethodParams: TJavaParamList;
     FMethodReturn: TJavaType;
+    FIsAbstract: Boolean;
   public
     constructor Create;
-    constructor Create(AMethodName: string; AMethodParams: TJavaParamList; AMethodReturn: TJavaType; AIsStatic: Boolean);
+    constructor Create(AMethodName: string; AMethodParams: TJavaParamList; AMethodReturn: TJavaType; AIsStatic: Boolean; AIsAbstract: Boolean);
     destructor Destroy; override;
     property MethodName: string read FMethodName write FMethodName;
     property MethodParams: TJavaParamList read FMethodParams write FMethodParams;
     property MethodReturn: TJavaType read FMethodReturn write FMethodReturn;
     property IsStatic: Boolean read FIsStatic write FIsStatic;
+    property IsAbstract: Boolean read FIsAbstract write FIsAbstract;
   end;
 
   TJavaMethodList = specialize TFPGList<TJavaMethod>;
@@ -158,15 +162,17 @@ begin
   FMethodParams := nil;
   FMethodReturn := nil;
   FIsStatic:= False;
+  FIsAbstract := False;
 end;
 
 constructor TJavaMethod.Create(AMethodName: string;
-  AMethodParams: TJavaParamList; AMethodReturn: TJavaType; AIsStatic: Boolean);
+  AMethodParams: TJavaParamList; AMethodReturn: TJavaType; AIsStatic: Boolean; AIsAbstract: Boolean);
 begin
   FMethodName:= AMethodName;
   FMethodParams := AMethodParams;
   FMethodReturn := AMethodReturn;
   FIsStatic:= AIsStatic;
+  FIsAbstract := AIsAbstract;
 end;
 
 destructor TJavaMethod.Destroy;
@@ -232,10 +238,11 @@ begin
   FIsRegular:= True;
 end;
 
-constructor TJavaType.Create(ATypeSig: string; AIsRegular: Boolean);
+constructor TJavaType.Create(ATypeSig: string; AIsRegular: Boolean; AIsArray: Boolean);
 begin
   FTypeSig:= ATypeSig;
   FIsRegular:= AIsRegular;
+  FIsArray := AIsArray;
 end;
 
 end.

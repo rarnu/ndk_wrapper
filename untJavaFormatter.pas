@@ -74,11 +74,11 @@ begin
     end;
 
     if (IsMethod(ATmp)) then begin
-      if (ATmp.Contains('{')) then begin
+      if (ATmp.Contains('{')) or (ATmp.Contains(');')) then begin
         outsl.Add(ATmp);
       end else begin
         ATmp2:= ATmp;
-        while (not ATmp2.Contains('{')) do begin
+        while (not ATmp2.Contains('{')) and (not ATmp2.Contains(');')) do begin
           Inc(idx);
           ATmp2 += sl[idx].Trim;
         end;

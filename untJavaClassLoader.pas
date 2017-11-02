@@ -107,14 +107,15 @@ begin
   for i := 0 to AImportList.Count - 1 do begin
     if (AImportList[i].EndsWith('.' + AType)) then begin
       Result.TypeSig:= 'L'+AImportList[i].Replace('.', '/', [rfIgnoreCase, rfReplaceAll]) + ';';
-      if (isArray) then Result.TypeSig:= '[' + Result.TypeSig;
+      if (isArray) then Result.TypeSig:= '[' + Result.TypeSig.Replace('[','').Replace(']','');
       Exit;
     end;
   end;
 
   // find from current package
   Result.TypeSig:= 'L' + APkgName.Replace('.', '/', [rfIgnoreCase, rfReplaceAll]) + '/' + AType + ';';
-  if (isArray) then Result.TypeSig:= '[' + Result.TypeSig
+  if (isArray) then Result.TypeSig:= '[' + Result.TypeSig.Replace('[','').Replace(']','');
+  Result.IsArray := Result.TypeSig.StartsWith('[');
 end;
 
 function IsField(ACode: string): Boolean;
@@ -215,6 +216,7 @@ begin
   ATmp:= ATmp.Substring(0, ATmp.IndexOf('('));
   AArr := ATmp.Split(' ');
   AMethod.IsStatic:= ATmp.Contains(' static ');
+  AMethod.IsAbstract := ATmp.Contains(' abstract ');
   AMethod.MethodName:= AArr[Length(AArr) - 1];
   ARetType:= AArr[Length(AArr) - 2];
   AMethod.MethodReturn := FindSig(ARetType, AImportList, APkgName);
@@ -241,7 +243,7 @@ begin
       importList.Add(sl[i].Replace('import ', '').Replace(';', '').Trim);
       Continue;
     end;
-    if (sl[i].Contains('public ')) and (sl[i].Contains(' class ')) then begin
+    if (sl[i].StartsWith('public ')) and (sl[i].Contains(' class ')) then begin
       AJavaClass.IsInterface:= False;
       FillJavaClassName(sl[i], AJavaClass);
       Continue;
